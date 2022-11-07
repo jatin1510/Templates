@@ -135,7 +135,7 @@ int32_t main()
     return 0;
 #endif
 
-    vector<int> v = {1, 2, 3, 4, 5};
+    vector<int> v = {1, 2, 3};
     print(v);
     return 0;
 }
