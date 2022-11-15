@@ -1,4 +1,5 @@
 set datestyle = euro;
+set search_path to "video_game_db"
 
 1. Employee
 
