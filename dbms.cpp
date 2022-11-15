@@ -401,13 +401,37 @@ int32_t main()
     //     cout << developer[getRand(1, 30) - 1] << '\n';
     // }
 
-    vector<string> tables = {"Employee", "Player", "Manager", "Developer", "Tags", "Upcoming_Games", "Game", "Achievements", "Achieves", "Belongs_To", "Discount", "Friendship", "Payment_Card", "Phone_No", "Pre_Registers", "Purchase", "Reviews", "Season_Rewards", "Systems_Supported", "Tournament"};
+    // vector<string> tables = {"Employee", "Player", "Manager", "Developer", "Tags", "Upcoming_Games", "Game", "Achievements", "Achieves", "Belongs_To", "Discount", "Friendship", "Payment_Card", "Phone_No", "Pre_Registers", "Purchase", "Reviews", "Season_Rewards", "Systems_Supported", "Tournament"};
 
-    for (auto i : tables)
+    // for (auto i : tables)
+    // {
+    //     cout << "COPY \"video_game_db\".\"" << i << "\" FROM '/private/tmp/CSVs/" << i << ".csv' DELIMITER ',' NULL AS 'null' csv header;" << '\n';
+    //     cout << "SELECT * FROM \"video_game_db\".\"" << i << "\";" << '\n';
+    //     cout << endl;
+    // }
+
+    vector<string> v1 = {"1SM01", "2loX3", "5zSIi", "5zSIi", "8TOCZ", "8TOCZ", "8TOCZ", "8ciNW", "8ciNW", "8kqdR", "9j8Om", "AkgCj", "DUPk6", "EO3s0", "EO3s0", "EO3s0", "Ge4Kz", "HtbyN", "IwwWr", "IwwWr", "LPdNF", "LQVPM", "OnFkm", "OnFkm", "OnFkm", "P1poP", "S8NEH", "S8NEH", "SEZQ3", "SEZQ3", "TRuLC", "TwpZ5", "U0rFl", "U0rFl", "USi2r", "USi2r", "VlRsS", "VlRsS", "VqYjE", "VqYjE", "W0fOX", "W0fOX", "W0fOX", "W7U0e", "W7U0e", "XQZeR", "Yc7b3", "YmNCM", "alJzi", "alJzi", "alJzi", "b3750", "b3750", "b3750", "b3750", "b3750", "cE90g", "cTTjD", "chL2T", "chL2T", "dbW91", "f5PtQ", "g52yS", "gDsZ6", "gRew3", "hmRg1", "httOy", "jK1Ve", "jpfm0", "k9V5M", "k9V5M", "kQbfC", "kQbfC", "klsFH", "lYqU3", "mbK3l", "pCFqe", "pmrVs", "pmrVs", "pnZH4", "r8ayt", "s6wR8", "sBGvn", "sBGvn", "sBGvn", "uk3MS", "wCxdN", "wCxdN", "wCxdN", "wV8aB", "wV8aB", "wV8aB", "y0Krw", "yS9op", "yfvgQ", "yfvgQ", "zhomz", "zhomz", "zhomz", "zhomz"};
+
+    vector<string> v2 = {"OnFkm", "lYqU3", "USi2r", "p9QNG", "AkgCj", "S8NEH", "b3750", "1SM01", "gRew3", "klsFH", "bPImg", "k9V5M", "jV3DK", "JUeSu", "TwpZ5", "Vub8p", "W7U0e", "yfvgQ", "JpEoH", "hmRg1", "y0Krw", "DQUvy", "EiWwu", "MWE5m", "wV8aB", "QhxmA", "TwpZ5", "bPImg", "f5PtQ", "pnZH4", "P1poP", "dQSAQ", "MWE5m", "b3750", "PepUd", "k9V5M", "AkgCj", "QhxmA", "MplRI", "SEZQ3", "httOy", "rud0W", "zHJfa", "TwpZ5", "dbW91", "USi2r", "IwwWr", "bPImg", "WzHEY", "cTTjD", "sBGvn", "PepUd", "cTTjD", "httOy", "lYqU3", "oFTCq", "yfvgQ", "EO3s0", "PUbgm", "jX3Sb", "oFTCq", "cTTjD", "XQZeR", "PepUd", "TRuLC", "IKsQV", "ioVkv", "gDsZ6", "dbW91", "JpEoH", "Vub8p", "DUPk6", "gxoTb", "oFTCq", "WzHEY", "pmrVs", "VlRsS", "dbW91", "uk3MS", "8ciNW", "zHJfa", "VAKto", "JpEoH", "W0fOX", "afXGa", "DQUvy", "gRew3", "k9V5M", "yS9op", "PepUd", "VAKto", "zhomz", "ioVkv", "WzHEY", "jpfm0", "zhomz", "S8NEH", "TkZe3", "ZLxdU", "trtCL"};
+
+    map<string, int> mp;
+    for (auto i : v1)
+        mp[i]++;
+
+    for (auto i : v2)
+        mp[i]++;
+
+    print(mp.size());
+
+    int ans = 0;
+    for (auto i : mp)
     {
-        cout << "COPY \"video_game_db\".\"" << i << "\" FROM '/private/tmp/CSVs/" << i << ".csv' DELIMITER ',' NULL AS 'null' csv header;" << '\n';
-        cout << "SELECT * FROM \"video_game_db\".\"" << i << "\";" << '\n';
-        cout << endl;
+        cout << i.first << ' ' << i.second << '\n';
+        ans += i.second;
     }
+    cout << endl;
+
+    print(ans);
+
     return 0;
 }

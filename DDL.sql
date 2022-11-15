@@ -1,5 +1,5 @@
-set datestyle = euro;
-set search_path to "video_game_db"
+SET datestyle = euro;
+SET SEARCH_PATH TO "video_game_db"
 
 1. Employee
 
