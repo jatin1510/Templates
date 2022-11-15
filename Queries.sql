@@ -173,7 +173,6 @@ ON "video_game_db"."Purchase"
 FOR EACH ROW
 EXECUTE PROCEDURE "video_game_db".validate_purchase_after();
 
-
 --16. Create a trigger to update balance in player's wallet, after that player is awarded with season rewards
 CREATE OR REPLACE function "video_game_db".update_wallet()
 
@@ -189,7 +188,6 @@ BEGIN
 	RETURN NEW;
 END;
 $BODY$;
-
 
 CREATE OR REPLACE TRIGGER Trig3
 AFTER INSERT
