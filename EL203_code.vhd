@@ -69,35 +69,35 @@ begin
     begin
     if (RESET='0') then
         state<=0;
-    end if;
-	 
-    if (PB1='1' and PB2='0' and PB3='0') then
-        if (state=1 or state=2) then
-            state<=6;
+    else
+        if (PB1='1' and PB2='0' and PB3='0') then
+            if (state=1 or state=2) then
+                state<=6;
+            end if;
+        elsif (PB1='0' and PB2='1' and PB3='0') then 
+            if (state=0) then 
+                state<=3;
+            elsif (state=2) then
+                state<=5;
+            end if;
+        elsif (PB1='0' and PB2='0' and PB3='1') then 
+            if (state=0 or state=1) then
+                state<=4;
+            end if; 
         end if;
-    elsif (PB1='0' and PB2='1' and PB3='0') then 
-        if (state=0) then 
-            state<=3;
-        elsif (state=2) then
-            state<=5;
-        end if;
-    elsif (PB1='0' and PB2='0' and PB3='1') then 
-        if (state=0 or state=1) then
-            state<=4;
-        end if; 
-    end if;
 
-    if(SBT='1' and SMM='0' and SMP='0' and STP='0') then
-        if (state=6) then
-            state<=0;
-        end if;
-    elsif (SBT='0' and SMM='1' and SMP='1' and STP='0') then
-        if (state=5 or state=3) then
-            state<=1;
-        end if;
-    elsif (SBT='0' and SMM='0' and SMP='0' and STP='1') then
-        if (state=4) then
-            state<=2;
+        if(SBT='1' and SMM='0' and SMP='0' and STP='0') then
+            if (state=6) then
+                state<=0;
+            end if;
+        elsif (SBT='0' and SMM='1' and SMP='1' and STP='0') then
+            if (state=5 or state=3) then
+                state<=1;
+            end if;
+        elsif (SBT='0' and SMM='0' and SMP='0' and STP='1') then
+            if (state=4) then
+                state<=2;
+            end if;
         end if;
     end if;
 
