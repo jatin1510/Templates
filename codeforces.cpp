@@ -49,23 +49,17 @@ template <typename T>
 istream &operator>>(istream &os, vector<T> &v)
 {
     for (int i = 0; i < v.size(); ++i)
-    {
         os >> v[i];
-    }
     return os;
 }
 
-// vector operator overload - output
-template <typename T>
-ostream &operator<<(ostream &os, const vector<T> &v)
+// vector - output
+template <typename T_vector>
+void printv(const T_vector &v)
 {
-    for (int i = 0; i < v.size(); ++i)
-    {
-        os << v[i];
-        if (i != v.size() - 1)
-            os << ' ';
-    }
-    return os;
+    for (auto i : v)
+        cout << i << ' ';
+    cout << endl;
 }
 
 int positive_modulo(int i, int n)
@@ -85,37 +79,16 @@ int positive_modulo(int i, int n)
 #define yes cout << "YES" << endl
 #define no cout << "NO" << endl
 
-// User implemented functions
+// Start
 void solve()
 {
-    // 1st
-    // int n;
-    // cin >> n;
+    int n, m, a, b;
+    cin >> n >> m >> a >> b;
 
-    // vector<int> v(n);
-    // cin >> v;
-
-    // sort(all(v));
-
-    // vector<int> pref(n), suff(n);
-    // pref[0] = v[0];
-    // for (int i = 1; i < n; i++)
-    // {
-    //     pref[i] = pref[i - 1] + v[i];
-    // }
-
-    // suff[n - 1] = v[n - 1];
-    // for (int i = n - 2; i >= 0; i--)
-    // {
-    //     suff[i] = suff[i + 1] + v[i];
-    // }
-
-    // int ans = pref.back();
-    // for (int i = 0; i < n - 1; i++)
-    //     ans = max(ans, abs(abs(suff[i + 1]) - abs(pref[i])));
-    // print(ans);
-
-    // 2nd
+    int ans = 1e9;
+    for (int i = 0; i <= n; i++)
+        ans = min(ans, i * a + ((n - i + m - 1) / m) * b);
+    print(ans);
 }
 int32_t main()
 {
@@ -135,7 +108,6 @@ int32_t main()
     return 0;
 #endif
 
-    vector<int> v = {1, 2, 3};
-    print(v);
+    solve();
     return 0;
 }

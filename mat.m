@@ -1,208 +1,107 @@
+%% Problem 5.8 matlab code
 clc;
-td = 0.002;
-%original sampling rate 500 Hz
-t = [0:td:2.];
-%time interval of 1 second
-% 1Hz+3Hz sinusoids
-xsig = cos(10 * pi * t) + cos(16 * pi * t);
-Lsig = length(xsig);
-ts = 0.02;
+close all;
+clear
+sigma1 = [0 0.1 0.2 1 2];
+sigma2 = 0:0.1:2;
+sim_err_prb = zeros(1, length(sigma1));
 
-%inew sampling rate = 50Hz.
+for i = 1:length(sigma1)
 
-Nfactor = ts / td;
-
-%send the signal through a 16-level uniform quantizer
-[s_out, sq_out, sqh_out, Delta, SQNR] = sampandquant(xsig, 16, td, ts);
-% calculate the Fourier transforms
-Lfft = 2^ceil(log2(Lsig) + 1);
-Fmax = 1 / (2 * td);
-Faxis = linspace (-Fmax, Fmax, Lfft);
-Xsig = fftshift (fft (xsig, Lfft));
-S_out = fftshift (fft (s_out, Lfft));
-%
-%Examples of sampling and reconstruction using
-%a) ideal impulse train through LPF
-%b) flat top pulse reconstruction through LPF
-
-%plot the original signal and the sample signals in time
-%and frequency domain
-figure (1);
-subplot (311); sfigla = plot (t, xsig, 'k');
-hold on; sfiglb = plot (t, s_out (1:Lsig), 'b'); hold off;
-set (sfigla, 'Linewidth', 2); set (sfiglb, 'Linewidth', 2.);
-xlabel ('time ( sec) ');
-title ('Signal {\itg}_T({\itt}) and its uniform samples');
-subplot (312); sfiglc = plot (Faxis, abs (Xsig));
-xlabel (' frequency (Hz) ');
-axis ([-150 150 0 300])
-set (sfiglc, 'linewidth', 1); title('Spectrum of {\itg}_T({\itt})');
-subplot (313); sfigld = plot (Faxis, abs (S_out));
-xlabel ('frequency(Hz)');
-axis ([-150 150 0 300 / Nfactor])
-set(sfiglc, 'linewidth', 1);
-title (' Spectrum of {\itg}_T({\itt})');
-BW = 10; %Bandwidth i s no l arger than l 0H z .
-H_lpf = zeros (1, Lfft); H_lpf (Lfft / 2 - BW:Lfft / 2 + BW - 1) = 1; % i deal LPF
-S_recv = Nfactor * S_out .* H_lpf; % ideal f i l ter ing
-s_recv = real(ifft (fftshift (S_recv))); % recons t ructed £ - domain
-s_recv = s_recv (1:Lsig);
-figure (2)
-subplot(211); sfig2a = plot (Faxis, abs (S_recv));
-xlabel (' frequency ( Hz ) ');
-axis ([-150 150 0 60]);
-title (' Spectrum of ideal filtering ( reconstruction ) ');
-subplot(212); sfig2b = plot (t, xsig, 'k-.', t, s_recv (1:Lsig), 'b');
-legend (' original signal ', ' reconstructed signal ');
-xlabel (' time(sec)');
-title (' original signal versus ideally reconstructed signal ');
-set (sfig2b, 'linewidth', 2);
-%non-ideal reconstruction
-ZOH = ones (1, Nfactor);
-s_ni = kron (downsample (s_out, Nfactor), ZOH);
-S_ni = fftshift (fft (s_ni, Lfft));
-S_recv2 = S_ni .* H_lpf;
-%ideal filtering
-s_recv2 = real (ifft (fftshift (S_recv2)));
-% reconstructed f-domain
-s_recv2 = s_recv2 (1:Lsig);
-% reconstructed t-domain
-% plot the ideally reconstructed signal in time and frequency domain
-figure(3)
-subplot(211); sfig3a = plot (t, xsig, 'b', t, s_ni (1:Lsig), 'b');
-xlabel ('time (sec) ');
-title ('original signal versus flat-top reconstruction');
-subplot (212); sfig3b = plot (t, xsig, 'b', t, s_recv2 (1:Lsig), 'b--');
-legend ('original signal', 'LPF reconstruction');
-xlabel ('time (sec) ');
-set (sfig3a, 'Linewidth', 2); set (sfig3b, 'Linewidth', 2);
-
-title ('original and flat-top reconstruction after LPF');
-
-function [sqnr, a_quan, code] = u_pcm(a, n)
-    amax = max(abs(a));
-    a_quan = a / amax;
-    b_quan = a_quan;
-    d = 2 / n;
-    q = d .* (0:n - 1);
-    q = q - ((n - 1) / 2) * d;
-
-    for i = 1:n
-        a_quan(find((q(i) - d / 2 <= a_quan) & (a_quan <= q(i) + d / 2))) = ...
-            q(i) .* ones(1, length(find((q(i) - d / 2 <= a_quan) & (a_quan <= q(i) + d / 2))));
-        b_quan(find(a_quan == q(i))) = (i - 1) * ones(1, length(find(a_quan == q(i))));
-        End
-        a_quan = a_quan * amax;
-        nu = ceil(log2(n));
-        code = zeros(length(a), nu);
-
-        for i = 1:length(a)
-
-            for j = nu:-1:0
-
-                if (fix(b_quan(i) / (2^j)) == 1)
-                    code(i, (nu - j)) = 1;
-                    b_quan(i) = b_quan(i) - 2^j;
-                end
-
-            end
-
-        end
-
-        sqnr = 20 * log10(norm(a) / norm(a - a_quan));
-        End
-        Code for 8 level & 16 level
-        clc;
-        echo on
-        t = 0:0.01:2;
-        yval = zeros(1, length(t));
-        f1 = @(x)(x); %Function
-
-        f2 = @(x)(-x + 2);
-
-        for i = 1:length(t)
-            p = t(i);
-
-            if (p >= 0) && (p < 1)
-                yval(i) = f1(p);
-            elseif (p >= 1) && (p < 2)
-                yval(i) = f2(p);
-            else
-                yval(i) = 0;
-            end
-
-        end
-
-        a = yval;
+    for j = 1:10000
+        % simulated error rate
+        [sim_err_prob, rec_sig, noise] = smldpe58(sigma1(i));
+        sim_err_prb(i) = sim_err_prb(i) + sim_err_prob;
     end
 
-    [sqnr8, aquan8, code8] = u_pcm(a, 8);
-    [sqnr16, aquan16, code16] = u_pcm(a, 16);
-    %Press a key to see the SQNR for N = 8
-    %pause
-    Sqnr8
-    %pause
-    % Press a key to see the SONR for N = 16
-    Sqnr16
-    % Press a key to see the plot of the signal and its quantized versions
-    %pause
-
-    figure;
-    plot(t, a, t, aquan8, 'k-', 'linewidth', 0.8);
-    legend('Original function', '8 level PCM Quantized output', 'Location', 'south');
-    xlabel('Time (t)');
-    ylabel('f(t) and f^{-}(t)');
-    title('8 level quantized output');
-    grid on;
-    figure;
-    plot(t, a, t, aquan16, 'k-', 'linewidth', 0.8);
-    legend('Original function', '16 level PCM Quantized output', 'Location', 'south');
-    xlabel('Time (t)');
-    ylabel('f(t) and f^{-}(t)');
-    title('16 level quantized output');
-    grid on;
-    figure;
-    plot(t, (a - aquan8), 'k-', 'linewidth', 0.8);
-    xlabel('Time (t)');
-    ylabel('Quantization Error for 8 level');
-    grid on;
-    figure;
-    plot(t, (a - aquan16), 'k-', 'linewidth', 0.8);
-    xlabel('Time (t)');
-    ylabel('Quantization Error for 16 level');
-    grid on;
-
-    fprintf('SQNR for 8-level Quantization %f\n\n', (sqnr8));
-    fprintf('SQNR for 16-level Quantization %f\n\n', (sqnr16));
+    figure(2 * i - 1);
+    plot(rec_sig(1:1000));
+    title('Received Signal');
+    figure(2 * i);
+    plot(noise(1:1000));
+    title('AWGN Noise');
+    sim_err_prb(i) = sim_err_prb(i) / 10000;
 end
 
-function [s_out, sq_out, sqh_out, Delta, SQNR] = sampandquant(sig_in, L, td, ts)
+theo_err_prb = zeros(1, length(sigma2));
 
-    if (rem(ts / td, 1) == 0)
+for i = 1:length(sigma2)
+    % signal-to-noise ratio
+    SNR_per_bit = exp(sigma2(i));
+    % theoretical error rate
+    theo_err_prb(i) = (3/2) * qfunct(sqrt((4/5) * (5 / (4 * (sigma2(i))))));
+end
 
-        nfac = round (ts / td);
-        p_zoh = ones (1, nfac);
-        s_out = downsample (sig_in, nfac);
-        [sq_out, Delta, SQNR] = uniquan(s_out, L);
-        s_out = upsample (s_out, nfac);
-        sqh_out = kron (sq_out, p_zoh);
-        sq_out = upsample (sq_out, nfac);
-    else
-        warning ('Error! ts/td is not an integer! ');
-        s_out = []; sq_out = []; sqh_out = []; Delta = []; SQNR = [];
+% Plotting commands follow.
+figure(11);
+semilogy(sigma2, theo_err_prb, 'r', 'linewidth', 1.5);
+hold on;
+semilogy(sigma1, sim_err_prb, 'bo', 'linewidth', 1.5);
+ylabel('Symbol Error Probability');
+xlabel('Variance');
+title('Serr vs Variance');
+legend('Theoritical', 'Simulation');
+
+function [p, rec_sig, noise] = smldpe58(sigmain)
+    % [p]=smldPe58(snr_in_dB)
+    % SMLDPE58 simulates the probability of error for the given
+    % snr_in_dB, signal to noise ratio in dB.
+    d = 1;
+    sgma = sqrt(sigmain); % sigma, standard deviation of noise
+    N = 10000; % number of symbols being simulated
+    % Generation of the quaternary data source follows.
+    for i = 1:N
+        temp = rand; % a uniform random variable over (0,1)
+
+        if (temp < 0.25)
+            dsource(i) = 0; % With probability 1/4, source output is "00."
+        elseif (temp < 0.5)
+            dsource(i) = 1; % With probability 1/4, source output is "01."
+        elseif (temp < 0.75)
+            dsource(i) = 2; % With probability 1/4, source output is "10."
+        else
+            dsource(i) = 3; % With probability 1/4, source output is "11."
+        end
+
     end
 
-end
+    % detection, and probability of error calculation
+    numoferr = 0;
+    rec_sig = zeros(1, N);
+    noise = zeros(1, N);
 
-function [q_out, Delta, SQNR] = uniquan(sig_in, L)
-    sig_pmax = max(sig_in);
-    sig_nmax = min(sig_in);
-    Delta = (sig_pmax - sig_nmax) / L;
-    q_level = sig_nmax + Delta / 2:Delta:sig_pmax - Delta / 2; % define Q-levels
-    L_sig = length(sig_in);
-    sigp = (sig_in - sig_nmax) / Delta + 1/2;
-    qindex = round (sigp);
-    qindex = min (qindex, L);
-    q_out = q_level (qindex);
-    SQNR = 20 * log10 (norm(sig_in) / norm(sig_in - q_out));
+    for i = 1:N
+        % the matched filter outputs
+        noise(i) = gngauss(sgma);
+
+        if (dsource(i) == 0)
+            r = -3 * d + noise(i); % if the source output is "00"
+        elseif (dsource(i) == 1)
+            r = -d + noise(i); % if the source output is "01"
+        elseif (dsource(i) == 2)
+            r = d + noise(i); % if the source output is "10"
+        else
+            r = 3 * d + noise(i); % if the source output is "11"
+        end
+
+        % Detector follows.
+        if (r <- 2 * d)
+            decis = 0; % Decision is "00."
+        elseif (r < 0)
+            decis = 1; % Decision is "01."
+        elseif (r < 2 * d)
+            decis = 2; % Decision is "10."
+        else
+            decis = 3; % Decision is "11."
+        end
+
+        rec_sig(i) = r;
+
+        if (decis ~= dsource(i)) % If it is an error, increase the error counter.
+            numoferr = numoferr + 1;
+        end
+
+    end
+
+    p = numoferr / N; % probability of error estimate
 end
