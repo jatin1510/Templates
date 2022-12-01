@@ -59,17 +59,13 @@ end abcd;
 
 architecture Behavioral of abcd is 
 signal state:integer:=0;
-signal s3:std_logic:='0'; 
-signal s4:std_logic:='0';
-signal s5:std_logic:='0'; 
-signal s6:std_logic:='0';
+signal up:std_logic:='0'; 
+signal down:std_logic:='0';
 
 begin
     check:process (RESET, SBT, SMM, SMP, STP, PB1, PB2, PB3) 
     begin
-    if (RESET='0') then
-        state<=0;
-    else
+    if (RESET/='0') then
         if (PB1='1' and PB2='0' and PB3='0') then
             if (state=1 or state=2) then
                 state<=6;
@@ -99,117 +95,56 @@ begin
                 state<=2;
             end if;
         end if;
+    else
+        state<=6;
     end if;
+    
+    state0 <= '0';
+    state1 <= '0'; 
+    state2 <= '0';
+    state3 <= '0';
+    state4 <= '0';
+    state5 <= '0';
+    state6 <= '0';
+    led_f1 <= '0';
+	led_f2 <= '0';
+	led_f3 <= '0';
 
     if (state=0) then
         state0 <= '1';
-        state1 <= '0'; 
-        state2 <= '0';
-        state3 <= '0';
-        s3 <= '0';
-        s4 <= '0';
-        state4 <= '0';
-        state5 <= '0';
-        s5 <= '0';
-        s6 <= '0';
-        state6 <= '0';
-		  led_f1 <= '1';
-		  led_f2 <= '0';
-		  led_f3 <= '0';
+        up <= '0';
+        down <= '0';
+		led_f1 <= '1';
     elsif (state=1) then
-        state0 <= '0';
         state1 <= '1'; 
-        state2 <= '0';
-        state3 <= '0';
-        s3 <= '0';
-        s4 <= '0';
-        state4 <= '0';
-        state5 <= '0';
-        s5 <= '0';
-        s6 <= '0';
-        state6 <= '0';
-		  led_f1 <= '0';
-		  led_f2 <= '1';
-		  led_f3 <= '0';
+        up <= '0';
+        down <= '0';
+		led_f2 <= '1';
     elsif (state=2) then
-        state0 <= '0';
-        state1 <= '0'; 
         state2 <= '1';
-        state3 <= '0';
-        s3 <= '0';
-        s4 <= '0';
-        state4 <= '0';
-        state5 <= '0';
-        s5 <= '0';
-        s6 <= '0';
-        state6 <= '0';
-		  led_f1 <= '0';
-		  led_f2 <= '0';
-		  led_f3 <= '1';
+        up <= '0';
+        down <= '0';
+		led_f3 <= '1';
     elsif (state=3) then
-        state0 <= '0';
-        state1 <= '0'; 
-        state2 <= '0';
         state3 <= '1';
-        s3 <= '1';
-        s4 <= '0';
-        state4 <= '0';
-        state5 <= '0';
-        s5 <= '0';
-        s6 <= '0';
-        state6 <= '0';
-		  led_f1 <= '0';
-		  led_f2 <= '0';
-		  led_f3 <= '0';
+        up <= '1';
+        down <= '0';
     elsif (state=4) then
-        state0 <= '0';
-        state1 <= '0'; 
-        state2 <= '0';
-        state3 <= '0';
-        s3 <= '0';
-        s4 <= '1';
         state4 <= '1';
-        state5 <= '0';
-        s5 <= '0';
-        s6 <= '0';
-        state6 <= '0';
-		  led_f1 <= '0';
-		  led_f2 <= '0';
-		  led_f3 <= '0';
+        up <= '1';
+        down <= '0';
     elsif (state=5) then
-        state0 <= '0';
-        state1 <= '0'; 
-        state2 <= '0';
-        state3 <= '0';
-        s3 <= '0';
-        s4 <= '0';
-        state4 <= '0';
         state5 <= '1';
-        s5 <= '1';
-        s6 <= '0';
-        state6 <= '0';
-		  led_f1 <= '0';
-		  led_f2 <= '0';
-		  led_f3 <= '0';
+        up <= '0';
+        down <= '1';
     elsif (state=6) then
-        state0 <= '0';
-        state1 <= '0'; 
-        state2 <= '0';
-        state3 <= '0';
-        s3 <= '0';
-        s4 <= '0';
-        state4 <= '0';
-        state5 <= '0';
-        s5 <= '0';
-        s6 <= '1';
         state6 <= '1';
-		  led_f1 <= '0';
-		  led_f2 <= '0';
-		  led_f3 <= '0';
+        up <= '0';
+        down <= '1';
     end if;
 
     end process;
 
-    M0 <= s5 or s6;
-    M1 <= s3 or s4;
+    M0 <= down;
+    M1 <= up;
 end Behavioral;
