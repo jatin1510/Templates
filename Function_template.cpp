@@ -408,19 +408,19 @@ int modular_inverse(int a, int m)
     }
 }
 
-const int N = 5;
-int fact[N];
-void factorials()
-{
-    fact[0] = 1;
-    for (int i = 1; i <= N; i++)
-        fact[i] = fact[i - 1] * i % mod;
-}
+// const int N = 5;
+// int fact[N];
+// void factorials()
+// {
+//     fact[0] = 1;
+//     for (int i = 1; i <= N; i++)
+//         fact[i] = (fact[i - 1] * i) % mod;
+// }
 
-int nCr(int n, int r)
-{
-    return fact[n] * modular_inverse(fact[r], mod) % mod * modular_inverse(fact[n - r], mod) % mod;
-}
+// int nCr(int n, int r)
+// {
+//     return fact[n] * modular_inverse(fact[r], mod) % mod * modular_inverse(fact[n - r], mod) % mod;
+// }
 
 int isDivisibleBy7(int num)
 {
@@ -514,13 +514,8 @@ public:
     }
 };
 
-// User implemented functions
 int32_t main()
 {
-    int a = 2, b = 5;
-    int x, y;
-    int g = GCD_Iterative(a, b, x, y);
-    cout << "gcd of " << a << " and " << b << " is " << g << '\n';
-    cout << a << "*" << x << " + " << b << "*" << y << " = " << g << '\n';
+
     return 0;
 }
