@@ -514,6 +514,53 @@ public:
     }
 };
 
+// grid minimum from (0,0) to (m-1,n-1)
+int minimumObstacles(vector<vector<int>> &grid)
+{
+    int m = grid.size(), n = grid[0].size();
+    auto isvalid = [&](int i, int j) -> bool
+    {
+        return 0 <= i and i < m and 0 <= j and j < n;
+    };
+
+    // RLDU
+    // 1234
+    vector<int> dx = {0, 0, 1, -1};
+    vector<int> dy = {1, -1, 0, 0};
+
+    vector<vector<int>> cost(m, vector<int>(n, 1e6));
+
+    cost[0][0] = 0;
+    priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<pair<int, pair<int, int>>>> pq;
+
+    pq.push({0, {0, 0}});
+
+    while (!pq.empty())
+    {
+        int c = pq.top().first;
+        int i = pq.top().second.first;
+        int j = pq.top().second.second;
+        pq.pop();
+
+        for (int k = 0; k < 4; k++)
+        {
+            int x = i + dx[k];
+            int y = j + dy[k];
+
+            int nexthop = grid[i][j];
+
+            if (isvalid(x, y) and cost[i][j] + nexthop < cost[x][y])
+                pq.push({cost[x][y] = cost[i][j] + nexthop, {x, y}});
+        }
+    }
+
+    return cost[m - 1][n - 1];
+}
+
+int flip(int n, int i)
+{
+    return (n ^ (1ll << i));
+}
 int32_t main()
 {
 

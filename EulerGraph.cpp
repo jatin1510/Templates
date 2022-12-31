@@ -49,34 +49,17 @@ template <typename T>
 istream &operator>>(istream &os, vector<T> &v)
 {
     for (int i = 0; i < v.size(); ++i)
-    {
         os >> v[i];
-    }
     return os;
 }
 
-// vector operator overload - output
-template <typename T>
-ostream &operator<<(ostream &os, const vector<T> &v)
+// vector - output
+template <typename T_vector>
+void printv(const T_vector &v)
 {
-    for (int i = 0; i < v.size(); ++i)
-    {
-        os << v[i];
-        if (i != v.size() - 1)
-            os << ' ';
-    }
-    return os;
-}
-
-template <class T>
-bool ckmin(T &a, const T &b)
-{
-    return b < a ? a = b, 1 : 0;
-}
-template <class T>
-bool ckmax(T &a, const T &b)
-{
-    return a < b ? a = b, 1 : 0;
+    for (auto i : v)
+        cout << i << ' ';
+    cout << endl;
 }
 
 int positive_modulo(int i, int n)
@@ -96,30 +79,68 @@ int positive_modulo(int i, int n)
 #define yes cout << "YES" << endl
 #define no cout << "NO" << endl
 
-// User implemented functions
-void solve()
+// for undirected graph
+void dfs(int node, vector<int> &v, vector<int> &vis, vector<int> adj[])
 {
-    ordered_set s;
-    
+    v.push_back(node);
+    vis[node] = 1;
+    for (auto i : adj[node])
+        if (!vis[i])
+            dfs(i, v, vis, adj);
 }
+bool checkEuler(int n, vector<int> adj[])
+{
+    vector<int> degree(n);
+    for (int i = 0; i < n; i++)
+        for (auto node : adj[i])
+            degree[node]++;
+
+    vector<int> vis(n);
+
+    vector<vector<int>> components;
+    for (int i = 0; i < n; i++)
+    {
+        if (!vis[i])
+        {
+            vector<int> v;
+            dfs(i, v, vis, adj);
+            components.push_back(v);
+        }
+    }
+
+    // cnt -> # of componenets size having > 1
+    int cnt = 0;
+    for (auto comp : components)
+        cnt += (comp.size() > 1);
+
+    if (cnt > 1)
+        return false;
+
+    // odd = # of odd Degree Nodes
+    int odds = 0;
+    for (int i = 0; i < n; i++)
+        odds += (degree[i] & 1);
+
+    if (odds == 0)
+        ; // Eulerian Graph
+
+    if (odds == 2)
+        ; // Semi Eulerian Graph
+
+    if (odds > 2)
+        return false; // Not Eulerian Graph
+
+    return true;
+}
+
 int32_t main()
 {
-    Code By Jatin;
-
-#ifdef FILEIO
-    freopen("input.txt", "r", stdin);
-    freopen("output.txt", "w", stdout);
-    freopen("error.txt", "w", stderr);
-#endif
-
-#ifndef MULTIPLE
-    int t;
-    cin >> t;
-    while (t--)
-        solve();
-    return 0;
-#endif
-
-    solve();
+    int n = 4;
+    vector<int> adj[n];
+    adj[0] = {1, 2};
+    adj[1] = {0, 2};
+    adj[2] = {0, 1};
+    adj[3] = {};
+    print(checkEuler(n, adj));
     return 0;
 }
