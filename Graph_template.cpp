@@ -163,7 +163,7 @@ public:
             cout << endl;
         }
     }
-    void BSF()
+    void BFS()
     {
         vector<int> visited(this->n + 1 - indexing, 0);
         for (int i = 1 - indexing; i <= this->n - indexing; i++)
@@ -765,7 +765,7 @@ public:
     {
         stack<int> s = topologicalSortingUSingdfs();
         
-        map<int, vector<int>> adjacency;
+        map<int, vector<int>> adjacency; // Reversed Graph
         for (auto i : adj)
             for (auto j : i.second)
                 adjacency[j].push_back(i.first);

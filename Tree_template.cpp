@@ -1327,7 +1327,7 @@ TreeNode *InorderSuccessor(TreeNode *root, TreeNode *node)
     return successor;
 }
 
-// When Not allowed to store inorder traversel means when we have to do this code in O(1) space
+// When Not allowed to store inorder traversel means when we have to do the code in O(1) space
 class BSTiteratorNext
 {
 private:
@@ -1513,6 +1513,28 @@ int LargestBST(TreeNode *root)
         return 0;
     return solve(root)[0];
 }
+
+vector<int> preparation(TreeNode *root)
+{
+    if (root == NULL)
+        return {};
+
+    vector<int> ans;
+    stack<TreeNode *> st;
+    st.push(root);
+    while (!st.empty())
+    {
+        root = st.top();
+        st.pop();
+        if (root->left != NULL)
+            st.push(root->left);
+        if (root->right != NULL)
+            st.push(root->right);
+        ans.push_back(root->val);
+    }
+    reverse(ans.begin(), ans.end());
+    return ans;
+}
 int main()
 {
     TreeNode *root = new TreeNode(1);
@@ -1520,10 +1542,11 @@ int main()
     root->right = new TreeNode(3);
     root->left->left = new TreeNode(4);
     root->left->right = new TreeNode(5);
-    root->right->left = new TreeNode(6);
+    // root->right->left = new TreeNode(6);
     root->right->right = new TreeNode(7);
 
     cout << postorderIterative(root) << endl;
-    // cout << preparation(root) << endl;
+    // cout << preorderIterative(root) << endl;
+    cout << preparation(root) << endl;
     return 0;
 }

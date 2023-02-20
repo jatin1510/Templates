@@ -10,10 +10,12 @@ using namespace std;
 class Solution
 {
 public:
-    vector<vector<int>> dp;
-    int mod = 1e9 + 7, N;
-    long long solve(int idx, int sum)
+    int dp[101][100001];
+    bool help(int idx, int sum, int N, int arr[])
     {
+        if (sum < 0)
+            return 0;
+
         if (sum == 0)
             return 1;
 
@@ -22,45 +24,40 @@ public:
 
         if (dp[idx][sum] != -1)
             return dp[idx][sum];
-
-        long long cnt = 0;
-        for (int i = 0; i <= 9; i++)
-        {
-            if (idx == 0 && i == 0)
-                continue;
-            if (sum >= i)
-                cnt = (cnt + solve(idx + 1, sum - i)) % mod;
-        }
-        return dp[idx][sum] = cnt;
+        bool take = help(idx + 1, sum - arr[idx], N, arr);
+        bool nottake = help(idx + 1, sum, N, arr);
+        return dp[idx][sum] = take or nottake;
     }
-    long int countWays(int n, int Sum)
+    int equalPartition(int N, int arr[])
     {
         // code here
-        if (!Sum)
-            return -1;
-
-        N = n;
-        dp = vector<vector<int>>(101, vector<int>(1001, -1));
-        
-        long long ans = solve(0, Sum);
-        if (!ans)
-            return -1;
-        return ans;
+        memset(dp, -1, sizeof dp);
+        int sum = accumulate(arr, arr + N, 0ll);
+        if (sum % 2 != 0)
+            return 0;
+        return help(0, sum / 2, N, arr);
     }
 };
 
 //{ Driver Code Starts.
+
 int main()
 {
     int t;
     cin >> t;
     while (t--)
     {
-        int idx, Sum;
-        cin >> idx >> Sum;
+        int N;
+        cin >> N;
+        int arr[N];
+        for (int i = 0; i < N; i++)
+            cin >> arr[i];
 
         Solution ob;
-        cout << ob.countWays(idx, Sum) << endl;
+        if (ob.equalPartition(N, arr))
+            cout << "YES\n";
+        else
+            cout << "NO\n";
     }
     return 0;
 }
