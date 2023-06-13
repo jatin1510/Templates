@@ -182,7 +182,9 @@ vector<int> postorderIterativeUsingOneStack(TreeNode *root)
                 }
             }
             else
+            {
                 curr = temp;
+            }
         }
     }
     return ans;
@@ -932,7 +934,7 @@ string serialize(TreeNode *root)
     {
         TreeNode *currNode = q.front();
         q.pop();
-        
+
         if (currNode == NULL)
             s.append("#,");
         else

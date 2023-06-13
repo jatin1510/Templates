@@ -4,6 +4,7 @@
 
 using namespace std;
 using namespace __gnu_pbds;
+
 #pragma GCC optimize("Ofast")
 #pragma GCC optimize("unroll-loops")
 
@@ -20,16 +21,18 @@ typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_
 typedef long long ll;
 
 // debug section
-void debug()
+void debug_out() { cout << endl; }
+template <typename Head, typename... Tail>
+void debug_out(Head H, Tail... T)
 {
-    cerr << endl;
+    cout << ' ' << H;
+    debug_out(T...);
 }
-template <typename T1, typename... T2>
-void debug(T1 var1, T2... var2)
-{
-    cerr << var1 << ' ';
-    debug(var2...);
-}
+#ifndef DEBUG
+#define debug(...) cout << '[' << __FILE__ << ':' << __LINE__ << "] (" << #__VA_ARGS__ << "):", debug_out(__VA_ARGS__)
+#else
+#define debug(...)
+#endif
 
 // print section
 void print()
@@ -47,29 +50,22 @@ void print(T1 var1, T2... var2)
 template <typename T>
 istream &operator>>(istream &os, vector<T> &v)
 {
-    for (int i = 0; i < v.size(); ++i)
-    {
+    for (int i = 0; i < (int)v.size(); ++i)
         os >> v[i];
-    }
     return os;
 }
 
-// vector operator overload - output
-template <typename T>
-ostream &operator<<(ostream &os, const vector<T> &v)
+// vector - output
+template <typename T_vector>
+void outvector(const T_vector &v, int start = -1, int end = -1, bool add_one = false)
 {
-    for (int i = 0; i < v.size(); ++i)
-    {
-        os << v[i];
-        if (i != v.size() - 1)
-            os << ' ';
-    }
-    return os;
-}
+    if (start < 0)
+        start = 0;
+    if (end < 0)
+        end = int(v.size());
 
-int positive_modulo(int i, int n)
-{
-    return (n + (i % n)) % n;
+    for (int i = start; i < end; i++)
+        cout << v[i] + (add_one ? 1 : 0) << (i < end - 1 ? ' ' : '\n');
 }
 
 // defines
@@ -80,60 +76,68 @@ int positive_modulo(int i, int n)
 #define PI (4 * atan(1))
 #define int ll
 #define all(v) (v).begin(), (v).end()
+#define allr(v) (v).rbegin(), (v).rend()
 #define endl '\n'
 #define yes cout << "YES" << endl
 #define no cout << "NO" << endl
 
-// User implemented functions
-vector<int> dx = {-1, 1, 0, 0};
-vector<int> dy = {0, 0, -1, 1};
-int n, m;
+// Start
+int n, inf = 1e9;
+vector<vector<int>> adj(200005);
+vector<int> childs(200005, 1);
+vector<int> dist(200005);
+vector<int> ans(200005);
 
-void dfs(int i, int j, vector<vector<int>> &vis, vector<string> &grid)
+void eval_child(int node, int par)
 {
-    vis[i][j] = 1;
-    auto isvalid = [&](int i, int j) -> bool
+    for (auto i : adj[node])
     {
-        return i >= 0 and i < n and j >= 0 and j < m;
-    };
-    for (int k = 0; k < 4; k++)
-    {
-        int x = i + dx[k];
-        int y = j + dy[k];
-
-        if (isvalid(x, y) and grid[x][y] != '#' and !vis[x][y])
+        if (i != par)
         {
-            dfs(x, y, vis, grid);
+            eval_child(i, node);
+            childs[node] += childs[i];
         }
     }
 }
-void solve()
+
+void eval_dist(int node, int par)
 {
-    cin >> n >> m;
-
-    vector<string> grid(n);
-    cin >> grid;
-
-    vector<vector<int>> vis(n, vector<int>(m));
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < m; j++)
-            if (grid[i][j] == '#')
-                vis[i][j] = 1;
-
-    int ans = 0;
-    for (int i = 0; i < n; i++)
+    for (auto i : adj[node])
     {
-        for (int j = 0; j < m; j++)
+        if (i != par)
         {
-            if (!vis[i][j])
-            {
-                ans++;
-                dfs(i, j, vis, grid);
-            }
+            eval_dist(i, node);
+            dist[node] += childs[i] + dist[i];
         }
     }
+}
 
-    print(ans);
+void dfs(int node, int par, int par_ans)
+{
+    ans[node] = dist[node] + (par_ans + (n - childs[node]));
+    for (auto i : adj[node])
+        if (i != par)
+            dfs(i, node, ans[node] - (dist[i] + childs[i]));
+}
+
+void solve()
+{
+    cin >> n;
+    int u, v;
+    for (int i = 0; i < n - 1; i++)
+    {
+        cin >> u >> v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    eval_child(1, 0);
+    eval_dist(1, 0);
+    dfs(1, 0, 0);
+
+    for (int i = 1; i <= n; i++)
+        cout << ans[i] << ' ';
+    cout << endl;
 }
 int32_t main()
 {
@@ -153,11 +157,6 @@ int32_t main()
     return 0;
 #endif
 
-    // solve();
-    srand(time(NULL));
-    int x = rand();
-    cout << x << '\n';
-    cout << x % 6 << '\n';
-    cout << x % 6 + 1 << '\n';
+    solve();
     return 0;
 }

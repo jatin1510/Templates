@@ -132,10 +132,12 @@ public:
     {
         return s;
     }
+
     bool isOperator(char ch)
     {
         return ch == '+' or ch == '-' or ch == '*' or ch == '/' or ch == '^';
     }
+
     int precedence(char ch)
     {
         if (ch == '^')
@@ -149,6 +151,7 @@ public:
 
         return 0;
     }
+    
     string postfix()
     {
         string ans;
@@ -397,13 +400,13 @@ public:
 };
 int32_t main()
 {
-    // string s = "K+L-M*N+(O^P)*W/U/V*T+Q";
+    string s = "K+L-M*N+(O^P)*W/U/V*T+Q";
     // string s = "2+3*4-8/2^3";
     // string s = "2+(3*1)-9";
     // string s = "(5+3)*(6/2)+(3*5)";
     // string s = "a+b*e/f+d-e^t";
     // string s = "(a+b)*(e/f)";
-    string s = "a*b/c+e/f*g+k-x*y";
+    // string s = "a*b/c+e/f*g+k-x*y";
 
     expression e(s);
     // print(e.prefixtoinfix());
@@ -413,20 +416,22 @@ int32_t main()
     // print("prefix2 :", e.prefix());
     // print("Innnfix :", e.infix());
 
-    TreeNode *root = e.expressionTree();
-    print(e.infix());
-    inorder(root);
-    cout << endl;
-    cout << endl;
+    // TreeNode *root = e.expressionTree();
+    // print(e.infix());
+    // inorder(root);
+    // cout << endl;
+    // cout << endl;
 
-    print(e.postfix());
-    postorder(root);
-    cout << endl;
-    cout << endl;
+    // print(e.postfix());
+    // postorder(root);
+    // cout << endl;
+    // cout << endl;
+
+    // print(e.prefix());
+    // preorder(root);
+    // cout << endl;
+    // cout << endl;
 
     print(e.prefix());
-    preorder(root);
-    cout << endl;
-    cout << endl;
     return 0;
 }

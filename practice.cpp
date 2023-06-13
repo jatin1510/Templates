@@ -21,16 +21,18 @@ typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_
 typedef long long ll;
 
 // debug section
-void debug()
+void debug_out() { cout << endl; }
+template <typename Head, typename... Tail>
+void debug_out(Head H, Tail... T)
 {
-    cerr << endl;
+    cout << ' ' << H;
+    debug_out(T...);
 }
-template <typename T1, typename... T2>
-void debug(T1 var1, T2... var2)
-{
-    cerr << var1 << ' ';
-    debug(var2...);
-}
+#ifndef DEBUG
+#define debug(...) cout << '[' << __FILE__ << ':' << __LINE__ << "] (" << #__VA_ARGS__ << "):", debug_out(__VA_ARGS__)
+#else
+#define debug(...)
+#endif
 
 // print section
 void print()
@@ -48,40 +50,22 @@ void print(T1 var1, T2... var2)
 template <typename T>
 istream &operator>>(istream &os, vector<T> &v)
 {
-    for (int i = 0; i < v.size(); ++i)
-    {
+    for (int i = 0; i < (int)v.size(); ++i)
         os >> v[i];
-    }
     return os;
 }
 
-// vector operator overload - output
-template <typename T>
-ostream &operator<<(ostream &os, const vector<T> &v)
+// vector - output
+template <typename T_vector>
+void outvector(const T_vector &v, int start = -1, int end = -1, bool add_one = false)
 {
-    for (int i = 0; i < v.size(); ++i)
-    {
-        os << v[i];
-        if (i != v.size() - 1)
-            os << ' ';
-    }
-    return os;
-}
+    if (start < 0)
+        start = 0;
+    if (end < 0)
+        end = int(v.size());
 
-template <class T>
-bool ckmin(T &a, const T &b)
-{
-    return b < a ? a = b, 1 : 0;
-}
-template <class T>
-bool ckmax(T &a, const T &b)
-{
-    return a < b ? a = b, 1 : 0;
-}
-
-int positive_modulo(int i, int n)
-{
-    return (n + (i % n)) % n;
+    for (int i = start; i < end; i++)
+        cout << v[i] + (add_one ? 1 : 0) << (i < end - 1 ? ' ' : '\n');
 }
 
 // defines
@@ -92,57 +76,175 @@ int positive_modulo(int i, int n)
 #define PI (4 * atan(1))
 #define int ll
 #define all(v) (v).begin(), (v).end()
+#define allr(v) (v).rbegin(), (v).rend()
 #define endl '\n'
 #define yes cout << "YES" << endl
 #define no cout << "NO" << endl
 
-// User implemented functions
-int xgcd(int a, int b, int &x, int &y)
+// Start
+template <typename T>
+class BinaryTreeNode
 {
-    if (b == 0)
+public:
+    T data;
+    BinaryTreeNode<T> *left;
+    BinaryTreeNode<T> *right;
+
+    BinaryTreeNode(T data)
     {
-        x = 1;
-        y = 0;
-        return a;
+        this->data = data;
+        left = NULL;
+        right = NULL;
+    }
+};
+
+int dfs(BinaryTreeNode<int> *root)
+{
+    if (!root)
+        return 0;
+
+    if (!root->left and !root->right)
+        return root->data;
+
+    int l = (root->left ? root->left->data : 0);
+    int r = (root->right ? root->right->data : 0);
+
+    if (root->data > l + r)
+    {
+        if (root->left)
+            root->left->data = root->data;
+
+        if (root->right)
+            root->right->data = root->data;
     }
 
-    int x1, y1;
-    int g = xgcd(b, a % b, x1, y1);
-    x = y1;
-    y = x1 - (a / b) * y1;
-    return g;
+    int left = dfs(root->left);
+    int right = dfs(root->right);
+
+    root->data = left + right;
+    return root->data;
 }
-vector<int> lpsArr(string s)
+void changeTree(BinaryTreeNode<int> *root)
 {
-    int n = s.size();
-    vector<int> lps(n);
-    lps[0] = 0;
-    int l;
-    for (int i = 1; i < n; i++)
-    {
-        l = lps[i - 1];
-
-        while (l > 0 && s[i] != s[l])
-            l = lps[l - 1];
-
-        if (s[i] == s[l])
-            ++l;
-
-        lps[i] = l;
-    }
-    return lps;
+    if (!root)
+        return;
+    dfs(root);
 }
+
+void inorder(BinaryTreeNode<int> *root)
+{
+    if (!root)
+        return;
+
+    inorder(root->left);
+    cout << root->data << ' ';
+    inorder(root->right);
+}
+struct Node
+{
+    int data;
+    Node *next;
+    Node(int data) : data(data) {}
+};
+
+Node *givelist(vector<int> v)
+{
+    int n = v.size();
+    if (!n)
+        return NULL;
+    int i = 0;
+    Node *head = new Node(v[i]);
+    Node *ptr = head;
+    while (++i < n)
+    {
+        Node *node = new Node(v[i]);
+        ptr->next = node;
+        ptr = node;
+    }
+    return head;
+}
+vector<int> givevector(Node *head)
+{
+    vector<int> ans;
+    Node *ptr = head;
+    while (ptr->next != NULL)
+    {
+        ans.push_back(ptr->data);
+        ptr = ptr->next;
+    }
+    ans.push_back(ptr->data);
+    return ans;
+}
+void printLL(Node *A)
+{
+    if (A == NULL)
+    {
+        cout << "List is empty\n";
+        return;
+    }
+    Node *ptr = A;
+    while (ptr->next != NULL)
+    {
+        cout << ptr->data << ' ';
+        ptr = ptr->next;
+    }
+    cout << ptr->data << endl;
+}
+
+Node *addOne(Node *head)
+{
+    // Your Code here
+    // return head of list after adding one
+    // reverse LL
+    if (!head)
+        return NULL;
+
+    Node *temp = NULL;
+    Node *curr = NULL;
+
+    while (head)
+    {
+        curr = head->next;
+        head->next = temp;
+        temp = head;
+        head = curr;
+    }
+    head = temp;
+
+    int carry = 1;
+    temp = head;
+    Node *prev = NULL;
+    while (temp != NULL)
+    {
+        int sum = temp->data + carry;
+        temp->data = sum % 10;
+        carry = sum / 10;
+        prev = temp;
+        temp = temp->next;
+    }
+    if (carry == 1)
+    {
+        Node *n = new Node(1);
+        prev->next = n;
+    }
+
+    // reverse LL
+    temp = NULL;
+    curr = NULL;
+
+    while (head != NULL)
+    {
+        curr = head->next;
+        head->next = temp;
+        temp = head;
+        head = curr;
+    }
+    return head = prev;
+}
+
 int32_t main()
 {
-    // int a = 15, b = 10;
-    // if (a > b)
-    //     swap(a, b);
-
-    // int x, y;
-    // int g = xgcd(a, b, x, y);
-    // cout << "gcd(" << a << ", " << b << ") is " << g << '\n';
-    // cout << x << " (x) * " << a << " (a) + " << y << " (y) * " << b << " (b) = " << g << '\n';
-
-    print(lpsArr("111").back());
+    vector<int> v = {9, 9};
+    printLL(addOne(givelist(v)));
     return 0;
 }

@@ -5,7 +5,7 @@
 using namespace std;
 using namespace __gnu_pbds;
 
-#pragma GCC optimize("Ofast")
+#pragma GCC optimize("Ofasta")
 #pragma GCC optimize("unroll-loops")
 
 mt19937 rng(chrono::steady_clock::now().time_since_epoch().count());

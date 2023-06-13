@@ -202,7 +202,7 @@ public:
     // O(n)
     int max()
     {
-        return *max_element(arr.begin(), arr.end() + n);
+        return *max_element(arr.begin(), arr.begin() + n);
     }
 
     // index of node, key to be changed

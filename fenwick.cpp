@@ -1,5 +1,6 @@
 // C++ code to demonstrate operations of Binary Index Tree
 #include <iostream>
+#include <bits/stdc++.h>
 
 using namespace std;
 
@@ -10,7 +11,7 @@ using namespace std;
 // Returns sum of arr[0..index]. This function assumes
 // that the array is preprocessed and partial sums of
 // array elements are stored in BITree[].
-int getSum(int BITree[], int index)
+int getSum(vector<int> &BITree, int index)
 {
     int sum = 0; // Initialize result
 
@@ -32,7 +33,7 @@ int getSum(int BITree[], int index)
 // Updates a node in Binary Index Tree (BITree) at given index
 // in BITree. The given value 'val' is added to BITree[i] and
 // all of its ancestors in tree.
-void updateBIT(int BITree[], int n, int index, int val)
+void updateBIT(vector<int> &BITree, int n, int index, int val)
 {
     // index in BITree[] is 1 more than the index in arr[]
     index = index + 1;
@@ -50,12 +51,11 @@ void updateBIT(int BITree[], int n, int index, int val)
 
 // Constructs and returns a Binary Indexed Tree for given
 // array of size n.
-int *constructBITree(int arr[], int n)
+vector<int> constructBITree(vector<int> &arr, int n)
 {
     // Create and initialize BITree[] as 0
-    int *BITree = new int[n + 1];
-    for (int i = 1; i <= n; i++)
-        BITree[i] = 0;
+
+    vector<int> BITree(n + 1);
 
     // Store the actual values in BITree[] using update()
     for (int i = 0; i < n; i++)
@@ -71,9 +71,9 @@ int *constructBITree(int arr[], int n)
 // Driver program to test above functions
 int main()
 {
-    int freq[] = {2, 1, 1, 3, 2, 3, 4, 5, 6, 7, 8, 9};
+    vector<int> freq = {2, 1, 1, 3, 2, 3, 4, 5, 6, 7, 8, 9};
     int n = sizeof(freq) / sizeof(freq[0]);
-    int *BITree = constructBITree(freq, n);
+    vector<int> BITree = constructBITree(freq, n);
     cout << "Sum of elements in arr[0..5] is " << getSum(BITree, 5);
 
     // Let use test the update operation

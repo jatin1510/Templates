@@ -521,7 +521,7 @@ public:
         return dp[n - 1][k];
     }
 
-    // 15th - https://www.codingninjas.com/codestudio/problems/partition-equal-subset-sum_892980utm_campaign=striver_dp_videos
+    // 15th - https://www.codingninjas.com/codestudio/problems/partition-equal-subset-sum_892980
     bool canPartition(vector<int> &arr, int n)
     {
         int sum = accumulate(arr.begin(), arr.end(), 0);
@@ -595,13 +595,12 @@ public:
             dp[0][0] = 1; // 1 case - not pick
 
         if (num[0] != 0 && num[0] <= tar)
-            dp[0][num[0]] = 1; // 1 case -pick
+            dp[0][num[0]] = 1; // 1 case - pick
 
         for (int ind = 1; ind < n; ind++)
         {
             for (int target = 0; target <= tar; target++)
             {
-
                 int notTaken = dp[ind - 1][target];
 
                 int taken = 0;

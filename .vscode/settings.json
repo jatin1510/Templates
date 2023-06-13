@@ -1,5 +1,7 @@
 {
     "files.associations": {
+        "*.ejs": "html",
+        "*.cpp": "cpp",
         "iostream": "cpp",
         "queue": "cpp",
         "functional": "cpp",
@@ -13,6 +15,33 @@
         "ostream": "cpp",
         "vector": "cpp",
         "iterator": "cpp",
-        "bitset": "cpp"
-    }
+        "bitset": "cpp",
+        "map": "cpp",
+        "unordered_map": "cpp",
+        "__hash_table": "cpp",
+        "__split_buffer": "cpp",
+        "__tree": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "initializer_list": "cpp",
+        "list": "cpp",
+        "regex": "cpp",
+        "set": "cpp",
+        "stack": "cpp",
+        "string_view": "cpp",
+        "unordered_set": "cpp",
+        "valarray": "cpp",
+        "new": "cpp",
+        "iomanip": "cpp",
+        "ios": "cpp",
+        "__locale": "cpp",
+        "cctype": "cpp",
+        "locale": "cpp",
+        "limits": "cpp",
+        "__node_handle": "cpp",
+        "span": "cpp",
+        "ranges": "cpp",
+        "complex": "cpp"
+    },
+    "cph.general.onceMaintainerMessage": false
 }
